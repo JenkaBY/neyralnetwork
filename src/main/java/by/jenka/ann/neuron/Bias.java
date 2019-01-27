@@ -1,5 +1,5 @@
 package by.jenka.ann.neuron;
 
-public class Bias extends Neuron
+public abstract class Bias extends Neuron
 {
 }
