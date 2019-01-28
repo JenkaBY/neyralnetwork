@@ -1,5 +1,6 @@
 package by.jenka.ann.neuron;
 
+import by.jenka.ann.collection.SafeArrayList;
 import by.jenka.ann.network.HyperParams;
 import by.jenka.ann.neuron.activation_function.ActivationFunctionStrategy;
 import by.jenka.ann.neuron.activation_function.impl.NoopActivationFunction;
@@ -22,15 +23,16 @@ public abstract class Neuron implements Connectable {
     protected List<Float> grads;
     protected List<Float> historyWeightDeltas;
 
-    public abstract void calculateDelta(float expectedOutput, HyperParams hyperParams);
+    public abstract void calculateDelta(float expectedOutput);
 
     public Neuron() {
         initDefaultActivationFunction();
         initDefaultRandomizedWeightStrategy();
         weights = new ArrayList<>();
         connectedNeurons = new ArrayList<>();
-        grads = new ArrayList<>();
-        historyWeightDeltas = new ArrayList<>();
+
+        grads = new SafeArrayList<>();
+        historyWeightDeltas = new SafeArrayList<>();
     }
 
     public float getInput() {
@@ -50,7 +52,24 @@ public abstract class Neuron implements Connectable {
         return output;
     }
 
-    ;
+
+    public void backwardPropagate(float expectedOutput, HyperParams hyperParams)
+    {
+        calculateDelta(expectedOutput);
+        for (int i = 0; i < connectedNeurons.size(); i++) {
+            Neuron connectedNeuron = connectedNeurons.get(i);
+            float weightConnectedNeuron = weights.get(i);
+            float deltaConnectedNeuron = activationFunction.calculateDerivative(connectedNeuron.output) * (weightConnectedNeuron * delta);
+            connectedNeuron.setDelta(deltaConnectedNeuron);
+            float grad = connectedNeuron.getOutput() * delta;
+
+            grads.set(i, grad);
+            float oldWeightDelta = historyWeightDeltas.get(i) != null ? historyWeightDeltas.get(i) : 0f;
+            float newWeightDelta = hyperParams.getSpeed() * grad + hyperParams.getMoment() * oldWeightDelta;
+            historyWeightDeltas.set(i, newWeightDelta);
+            weights.set(i, weights.get(i) + newWeightDelta);
+        }
+    }
 
     public void updateInput() {
         for (int i = 0; i < connectedNeurons.size(); i++) {

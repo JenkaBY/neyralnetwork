@@ -16,12 +16,13 @@ import by.jenka.ann.neuron.randomized_wieght.RandomWeightStrategy;
 import by.jenka.ann.neuron.randomized_wieght.impl.SimpleRandom;
 import by.jenka.ann.training.TrainingSet;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Application {
-    public static void main(String[] args) {
+public class Application
+{
+    public static void main(String[] args)
+    {
         List<TrainingSet> trainingSets = Arrays.asList(
                 new TrainingSet(new float[]{0, 0}, new float[]{0}),
                 new TrainingSet(new float[]{0, 1}, new float[]{1}),
@@ -32,7 +33,7 @@ public class Application {
         ActivationFunctionStrategy activationFunction = new Sigmoid();
         RandomWeightStrategy randomWeightStrategy = new SimpleRandom();
         HyperParams hyperParams = new HyperParams(0.5f, 0.3f);
-        new ArrayList<String>().add(0, "213");
+
         Neuron inputNeuron1 = new InputNeuron();
         Neuron inputNeuron2 = new InputNeuron();
         Layer inputLayer = new InputLayer();

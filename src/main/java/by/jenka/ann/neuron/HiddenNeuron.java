@@ -1,10 +1,10 @@
 package by.jenka.ann.neuron;
 
-import by.jenka.ann.network.HyperParams;
-
-public class HiddenNeuron extends Neuron {
+public class HiddenNeuron extends Neuron
+{
     @Override
-    public void calculateDelta(float expectedOutput, HyperParams hyperParams) {
+    public void calculateDelta(float expectedOutput)
+    {
         delta = activationFunction.calculateDerivative(expectedOutput);
     }
 }

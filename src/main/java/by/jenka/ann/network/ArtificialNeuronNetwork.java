@@ -34,6 +34,23 @@ public class ArtificialNeuronNetwork {
 
     }
 
+    public void training(float[] inputData, float[] expected, HyperParams hyperParams)
+    {
+        float[] result = calculate(inputData);
+
+        OutputLayer outputLayer = getOutputLayer();
+        List<Neuron> outputNeurons = outputLayer.getNeurons();
+        assert expected.length == outputNeurons.size();
+        // propagate output error to previous layers
+        for (int i = 0; i < expected.length; i++) {
+            outputNeurons.get(i).backwardPropagate(expected[i], hyperParams);
+        }
+        // 2 - skip output layer too
+        for (int i = layers.size() - 2; i > 0; i--) {
+            layers.get(i).getNeurons().forEach(neuron -> neuron.backwardPropagate());
+        }
+    }
+
     public float[] calculate(float[] inputData) {
         final List<Neuron> inputNeurons = getInputLayer().getNeurons();
         assert inputData.length == inputNeurons.size();
@@ -58,7 +75,6 @@ public class ArtificialNeuronNetwork {
         for (int i = 0; i < output.length; i++) {
             output[i] = result.get(i);
         }
-        ;
         return output;
     }
 
@@ -69,13 +85,9 @@ public class ArtificialNeuronNetwork {
 
     private void setConnectedNeuronsOnLayers() {
         getStreamedLayersWithoutOutputLayer().forEach(
-                layer -> {
-                    layer.getNeurons().forEach(
-                            neuron -> {
-                                getNextLayer(layer.getLevel()).setConnectedNeuron(neuron);
-                            }
-                    );
-                }
+                layer -> layer.getNeurons().forEach(
+                        neuron -> getNextLayer(layer.getLevel()).setConnectedNeuron(neuron)
+                )
         );
     }
 
