@@ -2,9 +2,17 @@ package by.jenka.ann.neuron;
 
 public class OutputNeuron extends Neuron
 {
+    private float error;
+
     @Override
-    public void calculateDelta(float expectedOutput)
+    public void calculateDelta(float error)
     {
-        delta = (expectedOutput - output) * activationFunction.calculateDerivative(output);
+//        error = (expectedOutput - output)
+        delta = error * activationFunction.calculateDerivative(output);
+    }
+
+    public void calculateError(float expectedOutput)
+    {
+        error = expectedOutput - output;
     }
 }

@@ -5,6 +5,7 @@ import by.jenka.ann.layer.InputLayer;
 import by.jenka.ann.layer.Layer;
 import by.jenka.ann.layer.OutputLayer;
 import by.jenka.ann.neuron.Neuron;
+import by.jenka.ann.neuron.OutputNeuron;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,11 +40,15 @@ public class ArtificialNeuronNetwork {
         float[] result = calculate(inputData);
 
         OutputLayer outputLayer = getOutputLayer();
-        List<Neuron> outputNeurons = outputLayer.getNeurons();
+        List<OutputNeuron> outputNeurons = outputLayer.getNeurons().stream()
+                .map(neuron -> (OutputNeuron) neuron).collect(Collectors.toList());
         assert expected.length == outputNeurons.size();
         // propagate output error to previous layers
         for (int i = 0; i < expected.length; i++) {
-            outputNeurons.get(i).backwardPropagate(expected[i], hyperParams);
+            OutputNeuron outputNeuron = outputNeurons.get(i);
+            float outputError = expected[i] - outputNeuron.getOutput();
+//            TODO
+            outputNeuron.backwardPropagate(outputError, hyperParams);
         }
         // 2 - skip output layer too
         for (int i = layers.size() - 2; i > 0; i--) {

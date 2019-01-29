@@ -23,7 +23,8 @@ public abstract class Neuron implements Connectable {
     protected List<Float> grads;
     protected List<Float> historyWeightDeltas;
 
-    public abstract void calculateDelta(float expectedOutput);
+
+    public abstract void calculateDelta(float error);
 
     public Neuron() {
         initDefaultActivationFunction();
@@ -53,9 +54,9 @@ public abstract class Neuron implements Connectable {
     }
 
 
-    public void backwardPropagate(float expectedOutput, HyperParams hyperParams)
+    public void backwardPropagate(float error, HyperParams hyperParams)
     {
-        calculateDelta(expectedOutput);
+        calculateDelta(error);
         for (int i = 0; i < connectedNeurons.size(); i++) {
             Neuron connectedNeuron = connectedNeurons.get(i);
             float weightConnectedNeuron = weights.get(i);
