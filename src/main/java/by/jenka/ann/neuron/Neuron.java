@@ -24,7 +24,7 @@ public abstract class Neuron implements Connectable {
     protected List<Float> historyWeightDeltas;
 
 
-    public abstract void calculateDelta(float error);
+//    public abstract void calculateDelta(float error);
 
     public Neuron() {
         initDefaultActivationFunction();
@@ -56,20 +56,6 @@ public abstract class Neuron implements Connectable {
 
     public void backwardPropagate(float error, HyperParams hyperParams)
     {
-        calculateDelta(error);
-        for (int i = 0; i < connectedNeurons.size(); i++) {
-            Neuron connectedNeuron = connectedNeurons.get(i);
-            float weightConnectedNeuron = weights.get(i);
-            float deltaConnectedNeuron = activationFunction.calculateDerivative(connectedNeuron.output) * (weightConnectedNeuron * delta);
-            connectedNeuron.setDelta(deltaConnectedNeuron);
-            float grad = connectedNeuron.getOutput() * delta;
-
-            grads.set(i, grad);
-            float oldWeightDelta = historyWeightDeltas.get(i) != null ? historyWeightDeltas.get(i) : 0f;
-            float newWeightDelta = hyperParams.getSpeed() * grad + hyperParams.getMoment() * oldWeightDelta;
-            historyWeightDeltas.set(i, newWeightDelta);
-            weights.set(i, weights.get(i) + newWeightDelta);
-        }
     }
 
     public void updateInput() {

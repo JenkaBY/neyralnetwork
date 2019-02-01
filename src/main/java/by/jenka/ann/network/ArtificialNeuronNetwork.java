@@ -35,7 +35,7 @@ public class ArtificialNeuronNetwork {
 
     }
 
-    public void training(float[] inputData, float[] expected, HyperParams hyperParams)
+    public void training(final float[] inputData, final float[] expected, final HyperParams hyperParams)
     {
         float[] result = calculate(inputData);
 
@@ -52,7 +52,7 @@ public class ArtificialNeuronNetwork {
         }
         // 2 - skip output layer too
         for (int i = layers.size() - 2; i > 0; i--) {
-            layers.get(i).getNeurons().forEach(neuron -> neuron.backwardPropagate());
+//            layers.get(i).getNeurons().forEach(neuron -> neuron.backwardPropagate(hyperParams));
         }
     }
 
